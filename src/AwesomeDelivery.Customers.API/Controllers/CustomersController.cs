@@ -1,5 +1,6 @@
 using AwesomeDelivery.Customers.Application.InputModels;
 using AwesomeDelivery.Customers.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AwesomeDelivery.Customers.API.Controllers
@@ -16,6 +17,7 @@ namespace AwesomeDelivery.Customers.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetById(Guid id) {
             var customer = await _customerService.GetById(id);
 
@@ -23,6 +25,7 @@ namespace AwesomeDelivery.Customers.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> Post(CustomerInputModel model) {
             var id = await _customerService.Add(model);
             
@@ -34,6 +37,7 @@ namespace AwesomeDelivery.Customers.API.Controllers
         }
 
         [HttpPut("{id}/addresses")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> PutAddresses(Guid id, DeliveryAddressInputModel model) {
             await _customerService.UpdateAddresses(id, model);
 
@@ -41,6 +45,7 @@ namespace AwesomeDelivery.Customers.API.Controllers
         }
 
         [HttpPut("{id}/payment-methods")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> PutPaymentMethods(Guid id, PaymentMethodInputModel model) {
             await _customerService.UpdatePaymentMethods(id, model);
             
