@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
+    <PackageReference Include="patrickreinan-aspnet-logging" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,5 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="patrickreinan-aspnet-logging" />
   </ItemGroup>
 </Project>

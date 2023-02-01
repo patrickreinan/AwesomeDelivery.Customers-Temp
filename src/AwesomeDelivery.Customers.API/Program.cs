@@ -1,6 +1,10 @@
-﻿using AwesomeDelivery.Customers.Application;
+﻿using AwesomeDelivery.Customers.API;
+using AwesomeDelivery.Customers.Application;
+using AwesomeDelivery.Customers.Application.Services;
 using AwesomeDelivery.Customers.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using patrickreinan_aspnet_logging;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,40 +19,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ICustomerService, CustomerServiceDecorator>();
 
-builder
-    .Services
-    .AddAuthorization()
-    .AddAuthentication(obj =>
-    {
-        obj.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+builder.Services.AddLogging(c =>
+{
 
-    }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-    {
+    c.AddPRConsoleLogger(() =>
+    new PRLoggerConfiguration(LogLevel.Information)
 
-
-        options.Authority = builder.Configuration["IdentityProvider:Authority"];
-        options.IncludeErrorDetails = true;
+    );
 
 
-        options.TokenValidationParameters =
-          new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-          {
-              ValidAudience = builder.Configuration["IdentityProvider:Audience"],
-              ValidateIssuer = true,
-              ValidIssuer = builder.Configuration["IdentityProvider:Issuer"],
-              ValidateIssuerSigningKey = true,
-          };
+});
 
 
-    });
 
 var app = builder.Build();
 
 
-app.UseAuthentication(); //1
-
-app.UseAuthorization(); //2
 
 app.MapControllers(); //3
 
@@ -58,6 +46,7 @@ if (app.Environment.IsDevelopment()) //4
     app.UseSwaggerUI();
 }
 
+app.UsePRLogging(nameof(Program));
 
 app.Run();
 

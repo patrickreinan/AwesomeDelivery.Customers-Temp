@@ -17,7 +17,11 @@ namespace AwesomeDelivery.Customers.Application
         }
 
         private static IServiceCollection AddApplicationServices(this IServiceCollection services) {
-            services.AddScoped<ICustomerService, CustomerService>();
+
+            //services.AddScoped<ICustomerService, CustomerService>();
+
+            services.AddScoped<CustomerService>();
+            
 
             return services;
         }
