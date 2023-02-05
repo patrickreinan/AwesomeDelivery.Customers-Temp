@@ -46,7 +46,21 @@ if (app.Environment.IsDevelopment()) //4
     app.UseSwaggerUI();
 }
 
+app.Use(async (context,next) =>
+{
+    const string X_CORRELATION_ID_HEADER = "x-correlation-id";
+
+    if (context.Request.Headers.ContainsKey(X_CORRELATION_ID_HEADER))
+        context.Response.Headers.Add(X_CORRELATION_ID_HEADER, context.Request.Headers[X_CORRELATION_ID_HEADER].First());
+
+    
+    await next.Invoke();
+});
+
+
 app.UsePRLogging(nameof(Program));
+
+
 
 app.Run();
 
